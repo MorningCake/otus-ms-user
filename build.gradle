@@ -45,16 +45,16 @@ repositories {
 }
 
 dependencies {
-//    implementation group: 'ru.morningcake', name: 'data-starter', version: project.starterVersion, changing: true
-//    implementation group: 'ru.morningcake', name: 'security-starter', version: project.starterVersion, changing: true
+    implementation group: 'ru.morningcake', name: 'lib-api-base', version: project.apiVersion, changing: true
+    implementation group: 'ru.morningcake', name: 'lib-api-user', version: project.apiVersion, changing: true
+
+    implementation group: 'ru.morningcake', name: 'data-starter', version: project.starterVersion, changing: true
+    implementation group: 'ru.morningcake', name: 'security-starter', version: project.starterVersion, changing: true
     implementation group: 'ru.morningcake', name: 'general-starter', version: project.starterVersion, changing: true
 
     testImplementation group: 'ru.morningcake', name: 'test-starter', version: project.starterVersion
 
-    implementation group: 'ru.morningcake', name: 'lib-api-base', version: project.apiVersion, changing: true
-    implementation group: 'ru.morningcake', name: 'lib-api-user', version: project.apiVersion, changing: true
-
-//    runtimeOnly group: 'ru.morningcake', name: 'postgres-jdbc-starter', version: project.starterVersion, changing: true
+    runtimeOnly group: 'ru.morningcake', name: 'postgres-jdbc-starter', version: project.starterVersion, changing: true
     annotationProcessor group: 'ru.morningcake', name: 'mapstruct-processor-starter', version: project.starterVersion, changing: true
 
 }

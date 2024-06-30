@@ -1,53 +1,69 @@
 package ru.morningcake.data.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-//import org.hibernate.Hibernate;
-//import org.hibernate.annotations.DynamicUpdate;
-//import ru.morningcake.entity.BaseEntity;
-//
-//import javax.persistence.Column;
-//import javax.persistence.Entity;
-//import javax.persistence.Table;
-//import java.util.Objects;
+import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.DynamicUpdate;
+import ru.morningcake.data.model.base.Role;
+import ru.morningcake.entity.BaseEntity;
+import ru.morningcake.model.user.Sex;
+
+import javax.persistence.*;
+import java.time.LocalDate;
+import java.util.Set;
+import java.util.UUID;
 
 
 /**
- * Пользователи системы.
+ * Пользователи - данные, роли, креды, аутентификация
  */
-//@Entity(name = "User")
-//@Table(schema = "femida_user", name = "femida_user")
-//@DynamicUpdate
+@Entity
+@Table(name = "otus_user")
+@DynamicUpdate
 @Setter
 @Getter
 @NoArgsConstructor
-//@AllArgsConstructor
-//@Builder
-public class User
-//    extends BaseEntity
-{
+@AllArgsConstructor
+@SuperBuilder
+public class User extends BaseEntity {
 
-//  /** Имя пользователя. */
-//  @Column(name = "first_name", nullable = false, length = 50)
-//  private String firstName;
-//
-//  /** Фамилия пользователя. */
-//  @Column(name = "last_name", nullable = false, length = 50)
-//  private String lastName;
-//
-//
-//
-//  @Override
-//  public boolean equals(Object o) {
-//    if (this == o) return true;
-//    if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-//    User that = (User) o;
-//    return getId() != null && Objects.equals(getId(), that.getId());
-//  }
-//
-//  @Override
-//  public int hashCode() {
-//    return this.getId() == null ? 43 : this.getId().hashCode();
-//  }
+  @Column(name = "first_name", nullable = false)
+  private String firstName;
+
+  @Column(name = "second_name", nullable = false)
+  private String secondName;
+
+  @Column(name = "birthdate", nullable = false)
+  private LocalDate birthdate;
+
+  @Column(name = "sex", nullable = false)
+  @Enumerated(EnumType.STRING)
+  private Sex sex;
+
+  @Column(name = "biography")
+  private String biography;
+
+  @Column(name = "city")
+  private String city;
+
+  @ElementCollection(targetClass = Role.class)
+  @JoinTable(name = "roles", joinColumns = @JoinColumn(name = "user_id"))
+  @Column(name = "role", nullable = false)
+  @Enumerated(EnumType.STRING)
+  private Set<Role> roles;
+
+  @Column(name = "username", nullable = false, unique = true)
+  private String username;
+
+  @Column(name = "password", nullable = false)
+  private String password;
+
+  @Column(name = "access_id")
+  private UUID accessId;
+
+  @Column(name = "exp")
+  private Long exp;
+
 }

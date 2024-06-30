@@ -2,7 +2,9 @@ package ru.morningcake.service;
 
 
 import ru.morningcake.data.entity.User;
+import ru.morningcake.jwt.JwtToken;
 
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -10,9 +12,18 @@ import java.util.UUID;
  */
 public interface UserService {
 
-  /**
-   * Поиск пользователя по ID
-   */
+  /** Получение токена текущего пользователя */
+  JwtToken getCurrent();
+
+  /** Поиск пользователя по ID */
   User getUserById(UUID id);
 
+  /** Поиск пользователя по username */
+  Optional<User> getOptionalUserByUsername(String username);
+
+  /** Регистрация пользователя */
+  UUID registration(User user);
+
+  /** Аутентификация пользователя */
+  JwtToken login(String username, String password);
 }

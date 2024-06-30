@@ -1,0 +1,3 @@
+DB_URL: jdbc:postgresql://tvldd-femid0014.delta.sbrf.ru:6544/femida?prepareThreshold=0
+DB_USER: postgres
+DB_PASS: pass

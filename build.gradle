@@ -1,0 +1,121 @@
+plugins {
+    id 'java'
+    id 'idea'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE' apply false
+    id 'io.freefair.lombok' version '6.2.0'
+    id 'org.springframework.boot' version '2.7.14'
+}
+
+// можно указать версии либ через command line, добавив -PfemidaLibApiVersion="X.X.X" -PfemidaStarterVersion="X.X.X"
+def defaultProperty(String name, defaultValue) {
+    if(!hasProperty(name) || findProperty(name).toString().isBlank()) {
+        if (!hasProperty(name)) {
+            println "cli property $name is null"
+        } else {
+            def emptyValue = property(name).toString().isBlank() ? "empty" : property(name).toString()
+            println "cli property $name is $emptyValue"
+        }
+        ext."$name" = defaultValue
+    }
+}
+// или изменить default
+defaultProperty 'starterVersion', '1.0.0-SNAPSHOT'
+defaultProperty 'apiVersion', '1.0.0-SNAPSHOT'
+
+group = 'ru.morningcake'
+version = '1.0.0-SNAPSHOT'
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+configurations.all {
+    resolutionStrategy {
+        cacheChangingModulesFor 0, 'seconds'
+    }
+//    exclude module: "spring-boot-starter-logging"
+//    exclude module: "logback-classic"
+}
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+
+dependencies {
+//    implementation group: 'ru.morningcake', name: 'data-starter', version: project.starterVersion, changing: true
+//    implementation group: 'ru.morningcake', name: 'security-starter', version: project.starterVersion, changing: true
+    implementation group: 'ru.morningcake', name: 'general-starter', version: project.starterVersion, changing: true
+
+    testImplementation group: 'ru.morningcake', name: 'test-starter', version: project.starterVersion
+
+    implementation group: 'ru.morningcake', name: 'lib-api-base', version: project.apiVersion, changing: true
+    implementation group: 'ru.morningcake', name: 'lib-api-user', version: project.apiVersion, changing: true
+
+//    runtimeOnly group: 'ru.morningcake', name: 'postgres-jdbc-starter', version: project.starterVersion, changing: true
+    annotationProcessor group: 'ru.morningcake', name: 'mapstruct-processor-starter', version: project.starterVersion, changing: true
+
+}
+
+sourceCompatibility = JavaVersion.VERSION_11
+targetCompatibility = JavaVersion.VERSION_11
+
+compileJava.options.encoding = "UTF-8"
+compileTestJava.options.encoding = "UTF-8"
+
+tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
+    dependsOn("PrintLibsVersion")
+}
+
+tasks.register("PrintLibsVersion") {
+    group = "build"
+    doLast {
+        println "apiVersion = $apiVersion, starterVersion = $starterVersion"
+    }
+}
+
+tasks.withType(Test) {
+    systemProperty "file.encoding", "UTF-8"
+}
+
+javadoc {
+    options.encoding = 'UTF-8'
+}
+
+task sourcesJar(type: Jar) {
+    from sourceSets.main.allJava
+    archiveClassifier.set("sources")
+}
+
+task javadocJar(type: Jar) {
+    from javadoc
+    archiveClassifier.set("javadoc")
+}
+
+test {
+    useJUnitPlatform()
+    reports {
+        junitXml.enabled = false
+        html.enabled = true
+    }
+}
+
+jar {
+//    enabled = true
+    archiveBaseName = 'ms-user'
+    archiveVersion = version
+}
+
+bootJar {
+    archiveFileName = 'ms-user.jar'
+    archiveBaseName = 'ms-user'
+    archiveVersion = version
+    manifest {
+        attributes("Implementation-Title": "Ms-User",
+                "Implementation-Version": version.toString())
+    }
+    launchScript()
+}

@@ -49,7 +49,7 @@ public class UserController implements UserApi {
   /**
    * GET /user/{id} Получение пользователя по ID
    */
-  @HasRoles(roles = {Role.ADMIN})
+  @HasRoles(roles = {Role.USER})
   @Override
   public ResponseEntity<UserResponse> getUserById(UUID id) {
     User user = userService.getUserById(id);

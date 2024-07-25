@@ -1,5 +1,5 @@
 server:
-  port: 11100
+  port: ${SERVER_PORT}
   compression:
     enabled: true
     min-response-size: 1
@@ -23,13 +23,13 @@ spring:
     show-sql: true
     hibernate:
       use-new-id-generator-mappings: true
-      ddl-auto: update #validate
+      ddl-auto: validate #update
     properties:
       hibernate:
         id.new_generator_mappings: true
         globally_quoted_identifiers: true
         jdbc.lob.non_contextual_creation: true
-        default_schema: otus_user
+        default_schema: ${DB_SCHEMA}
         format_sql: true
         use_sql_comments: true
     database-platform: org.hibernate.dialect.PostgreSQL10Dialect
@@ -47,5 +47,5 @@ spring:
     hikari:
       pool-name: OtusMsUserPool
   liquibase:
-    default-schema: otus_user
-    enabled: false
+    default-schema: ${DB_SCHEMA}
+    enabled: true

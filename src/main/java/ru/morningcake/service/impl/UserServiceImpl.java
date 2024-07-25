@@ -1,8 +1,11 @@
 package ru.morningcake.service.impl;
 
 
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -39,6 +42,11 @@ public class UserServiceImpl implements UserService {
 
   private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
+  @Value("${spring.datasource.url}")
+  @Getter
+  @Setter
+  private String datasourceUrl;
+
   @Override
   public JwtToken getCurrent() {
     return securityFacade.getToken();
@@ -60,11 +68,13 @@ public class UserServiceImpl implements UserService {
   @Override
   @Transactional
   public UUID registration(User user) {
+    log.debug("Registration, db_url is " + datasourceUrl);
     checkUniqueUsername(user.getUsername());
     // хэшировать и переписать пароль, установить роль
     user.setPassword(getEncodedPassword(user.getPassword()));
     user.setRoles(Set.of(Role.USER));
     user = userRepository.save(user);
+    log.debug("User is stored!");
     return user.getId();
   }
 

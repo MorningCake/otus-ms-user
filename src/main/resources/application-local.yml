@@ -1,3 +1,8 @@
-DB_URL: jdbc:postgresql://localhost:5432/otus_highload
+SERVER_PORT: 11100
 DB_USER: postgres
 DB_PASS: root
+DB_HOST: localhost
+DB_PORT: 5432
+DB_NAME: otus_highload
+DB_SCHEMA: otus_user
+DB_URL: jdbc:postgresql://${DB_HOST}:${DB_PORT}/${DB_NAME}

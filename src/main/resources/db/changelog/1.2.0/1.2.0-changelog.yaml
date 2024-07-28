@@ -1,0 +1,9 @@
+databaseChangeLog:
+  - include:
+      file: db/changelog/1.2.0/changes/004-addFriendsAndPostsTables.sql
+  - include:
+      file: db/changelog/1.2.0/changes/005-addSelfUserAndFriends.sql
+  - include:
+      file: db/changelog/1.2.0/changes/006_callAndDrop_addFriendsAndPosts.sql
+  - include:
+      file: db/changelog/1.2.0/changes/007_proc_addFriendsAndPosts.sql

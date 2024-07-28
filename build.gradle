@@ -19,11 +19,11 @@ def defaultProperty(String name, defaultValue) {
     }
 }
 // или изменить default
-defaultProperty 'starterVersion', '1.0.0-SNAPSHOT'
-defaultProperty 'apiVersion', '1.0.0-SNAPSHOT'
+defaultProperty 'starterVersion', '1.2.0-SNAPSHOT'
+defaultProperty 'apiVersion', '1.2.0-SNAPSHOT'
 
 group = 'ru.morningcake'
-version = '1.0.0-SNAPSHOT'
+version = '1.2.0-SNAPSHOT'
 
 configurations {
     compileOnly {

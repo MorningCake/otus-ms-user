@@ -18,10 +18,13 @@ import ru.morningcake.data.repository.UserRepository;
 import ru.morningcake.exception.SecurityException;
 import ru.morningcake.jwt.JwtToken;
 import ru.morningcake.security.SecurityFacade;
+import ru.morningcake.service.FriendService;
 import ru.morningcake.service.UserService;
+import ru.morningcake.utils.CrudUtils;
 import ru.morningcake.utils.ExceptionUtils;
 import ru.morningcake.utils.TimeUtils;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -34,7 +37,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @Slf4j
 @ConfigurationProperties(prefix = "sberbank.roles")
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl implements UserService, FriendService {
 
   private final UserRepository userRepository;
   private final SecurityFacade securityFacade;
@@ -50,6 +53,13 @@ public class UserServiceImpl implements UserService {
   @Override
   public JwtToken getCurrent() {
     return securityFacade.getToken();
+  }
+
+  @Override
+  @Transactional(readOnly = true)
+  public User getCurrentUser() {
+    JwtToken token = getCurrent();
+    return getUserById(token.getId());
   }
 
   @Override
@@ -93,6 +103,12 @@ public class UserServiceImpl implements UserService {
     return userMapper.toJwt(user);
   }
 
+  @Override
+  @Transactional(readOnly = true)
+  public List<User> searchUsersByNames(String firstName, String lastName) {
+    return userRepository.searchByNames( lastName + "%", firstName + "%");
+  }
+
   private SecurityException securityException() {
     return new SecurityException("Incorrect login or password!");
   }
@@ -110,6 +126,36 @@ public class UserServiceImpl implements UserService {
 
   private String getEncodedPassword(String password) {
     return passwordEncoder.encode(password);
+  }
+
+  @Override
+  @Transactional
+  public boolean addFriendById(UUID id) {
+    User currentUser = getCurrentUser();
+    User friend = getUserById(id);
+    friend.addFriend(currentUser);
+    return currentUser.addFriend(friend);
+  }
+
+  @Override
+  @Transactional
+  public boolean deleteFriendById(UUID id) {
+    User currentUser = getCurrentUser();
+    User friend = getUserById(id);
+    return currentUser.deleteFriend(friend);
+  }
+
+  @Override
+  @Transactional(readOnly = true)
+  public List<User> getFriends(Integer pageSize, Integer pageNum) {
+    return getFriendsForUser(getCurrent().getId(), pageSize, pageNum);
+  }
+
+  @Override
+  @Transactional(readOnly = true)
+  public List<User> getFriendsForUser(UUID userId, Integer pageSize, Integer pageNum) {
+    int offset = CrudUtils.calcOffset(pageNum, pageSize);
+    return userRepository.findFriends(userId, pageSize, offset);
   }
 
 }

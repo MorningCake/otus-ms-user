@@ -30,7 +30,7 @@ import java.util.UUID;
  * Обрабатывает запросы на получение и изменение данных пользователя
  */
 @RestController
-@RequestMapping(path = "api")
+@RequestMapping(path = "api/ms-user")
 @RequiredArgsConstructor
 @Slf4j
 public class LoginController implements LoginApi, RegistrationApi {

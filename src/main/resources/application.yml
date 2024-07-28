@@ -9,6 +9,8 @@ logging:
     file: UTF-8
   level:
     ru.sberbank.femida.ms.user.controller: info # debug - логирование реквеста, info - без
+    ru.morningcake.component.PostFifoCache: debug # debug - логирование кэша постов, info - без
+    org.springframework.transaction: debug
 #    org.hibernate.SQL: info
 
 spring:
@@ -49,3 +51,14 @@ spring:
   liquibase:
     default-schema: ${DB_SCHEMA}
     enabled: true
+
+app:
+  cache:
+    posts.size: ${POSTS_CACHE_SIZE:1000}
+  emulation.posts:
+    enabled: ${POSTS_EMULATION_ENABLED:true}
+    delay: ${POSTS_EMULATION_DELAY:1} # interval, minutes
+    initDelay: ${POSTS_EMULATION_INIT_DELAY:2} # after app start, minutes
+    filePath: ${POSTS_EMULATION_FILE_PATH:src/main/resources/db/changelog/1.2.0/posts/posts.txt} # posts text file. Every post in new string
+    qnt: ${POSTS_EMULATION_QNT:1} # user posts add in single iteration
+    annId: ${ANN_ID:ac172001-9327-19ff-8193-2770af5f0000} # ID of our user Ann
